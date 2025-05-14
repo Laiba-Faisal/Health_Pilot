@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Add your head content here -->
+</head>
+<body>
+    <h1>Update Doctor Information</h1>
+    <form action="{{ url_for('update_doctor', doctor_id=doctor.id) }}" method="post">
+        <!-- Include form fields with existing doctor data -->
+        <label for="full_name">Full Name:</label>
+        <input type="text" name="full_name" value="{{ doctor.full_name }}" required>
+        <!-- Add other form fields as needed -->
+
+        <button type="submit">Update Doctor</button>
+    </form>
+</body>
+</html>

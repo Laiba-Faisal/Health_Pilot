@@ -1,0 +1,978 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Admin Panel</title>-->
+<!--    &lt;!&ndash; Add this script tag to include jQuery &ndash;&gt;-->
+<!--<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>-->
+
+<!--    <style>-->
+<!--        body {-->
+<!--            background: linear-gradient(135deg, #71b7e6, #9b59b6);-->
+<!--            margin: 0;-->
+<!--            font-family: Arial, sans-serif;-->
+<!--        }-->
+
+<!--        .container {-->
+<!--            width: 80%;-->
+<!--            margin: auto;-->
+<!--            overflow-x: auto;-->
+<!--        }-->
+
+<!--        h1 {-->
+<!--            color: #fff;-->
+<!--        }-->
+
+<!--        table {-->
+<!--            width: 100%;-->
+<!--            border-collapse: collapse;-->
+<!--            margin-top: 20px;-->
+<!--        }-->
+
+<!--        th, td {-->
+<!--            padding: 12px;-->
+<!--            text-align: left;-->
+<!--            border-bottom: 1px solid #ddd;-->
+<!--            color: #fff;-->
+<!--        }-->
+
+<!--        th {-->
+<!--            background-color: #3498db;-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        td img {-->
+<!--            max-width: 100px;-->
+<!--            max-height: 100px;-->
+<!--        }-->
+
+<!--        button {-->
+<!--            background-color: #e74c3c;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            padding: 8px 12px;-->
+<!--            cursor: pointer;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <div class="container">-->
+<!--        <h1>Admin Panel</h1>-->
+<!--        <table>-->
+<!--            <tr>-->
+<!--                <th>ID</th>-->
+<!--                <th>Full Name</th>-->
+<!--                <th>Degree</th>-->
+<!--                <th>Specialization</th>-->
+<!--                <th>Disease Specialist</th>-->
+<!--                <th>Email</th>-->
+<!--                <th>Contact</th>-->
+<!--                <th>Address</th>-->
+<!--                <th>Country</th>-->
+<!--                <th>Gender</th>-->
+<!--                <th>Image</th>-->
+<!--                <th>Update</th>-->
+<!--                <th>Delete</th>-->
+<!--            </tr>-->
+<!--            {% for doctor in doctors %}-->
+<!--            <tr>-->
+<!--                <td>{{ doctor.id }}</td>-->
+<!--                <td>{{ doctor.full_name }}</td>-->
+<!--                <td>{{ doctor.degree }}</td>-->
+<!--                <td>{{ doctor.specialization }}</td>-->
+<!--                <td>{{ doctor.disease_specialist }}</td>-->
+<!--                <td>{{ doctor.email }}</td>-->
+<!--                <td>{{ doctor.contact }}</td>-->
+<!--                <td>{{ doctor.address }}</td>-->
+<!--                <td>{{ doctor.country }}</td>-->
+<!--                <td>{{ doctor.gender }}</td>-->
+<!--                <td><img src="data:image/png;base64,{{ doctor.image_data }}" alt="Doctor Image"></td>-->
+<!--             &lt;!&ndash; Inside the loop where you generate the table rows &ndash;&gt;-->
+<!--<td>-->
+<!--    <form action="/admin/update/{{ doctor.id }}" method="post">-->
+<!--        <button type="submit">Update</button>-->
+<!--    </form>-->
+<!--</td>-->
+<!--<td>-->
+<!--    <button type="button" onclick="deleteDoctor({{ doctor.id }})">Delete</button>-->
+<!--</td>-->
+<!--<script>-->
+<!--    function deleteDoctor(doctorId) {-->
+<!--        // Get authentication credentials if needed-->
+<!--        var username = prompt("Enter username:");-->
+<!--        var password = prompt("Enter password:");-->
+
+<!--        // Make an AJAX request to delete the doctor-->
+<!--        $.ajax({-->
+<!--            type: "POST",-->
+<!--            url: "/admin/delete/" + doctorId,-->
+<!--            data: { username: username, password: password },-->
+<!--            success: function (response) {-->
+<!--                // Handle success, you might want to update the UI or show a message-->
+<!--                console.log(response);-->
+<!--                location.reload();  // Reload the page to reflect changes-->
+<!--            },-->
+<!--            error: function (error) {-->
+<!--                // Handle errors, you might want to show an error message-->
+<!--                console.error(error);-->
+<!--            }-->
+<!--        });-->
+<!--    }-->
+<!--</script>-->
+
+
+
+<!--            </tr>-->
+<!--            {% endfor %}-->
+<!--        </table>-->
+<!--    </div>-->
+<!--</body>-->
+<!--</html>-->
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Admin Panel</title>-->
+<!--    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            background: linear-gradient(135deg, #71b7e6, #9b59b6);-->
+<!--            margin: 0;-->
+<!--            font-family: Arial, sans-serif;-->
+<!--        }-->
+
+<!--        .container {-->
+<!--            width: 80%;-->
+<!--            margin: auto;-->
+<!--            overflow-x: auto;-->
+<!--        }-->
+
+<!--        h1 {-->
+<!--            color: #fff;-->
+<!--        }-->
+
+<!--        table {-->
+<!--            width: 100%;-->
+<!--            border-collapse: collapse;-->
+<!--            margin-top: 20px;-->
+<!--        }-->
+
+<!--        th, td {-->
+<!--            padding: 12px;-->
+<!--            text-align: left;-->
+<!--            border-bottom: 1px solid #ddd;-->
+<!--            color: #fff;-->
+<!--        }-->
+
+<!--        th {-->
+<!--            background-color: #3498db;-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        td img {-->
+<!--            max-width: 100px;-->
+<!--            max-height: 100px;-->
+<!--        }-->
+
+<!--        button {-->
+<!--            background-color: #e74c3c;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            padding: 8px 12px;-->
+<!--            cursor: pointer;-->
+<!--        }-->
+
+<!--        /* Add this style for the modal */-->
+<!--        .modal {-->
+<!--            display: none;-->
+<!--            position: fixed;-->
+<!--            z-index: 1;-->
+<!--            left: 0;-->
+<!--            top: 0;-->
+<!--            width: 100%;-->
+<!--            height: 100%;-->
+<!--            overflow: auto;-->
+<!--            background-color: rgba(0, 0, 0, 0.4);-->
+<!--            padding-top: 60px;-->
+<!--        }-->
+
+<!--        .modal-content {-->
+<!--            background-color: #fefefe;-->
+<!--            margin: 5% auto;-->
+<!--            padding: 20px;-->
+<!--            border: 1px solid #888;-->
+<!--            width: 80%;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <div class="container">-->
+<!--        <h1>Admin Panel</h1>-->
+<!--        <table>-->
+<!--            <tr>-->
+<!--                <th>ID</th>-->
+<!--                <th>Full Name</th>-->
+<!--                <th>Degree</th>-->
+<!--                <th>Specialization</th>-->
+<!--                <th>Disease Specialist</th>-->
+<!--                <th>Email</th>-->
+<!--                <th>Contact</th>-->
+<!--                <th>Address</th>-->
+<!--                <th>Country</th>-->
+<!--                <th>Gender</th>-->
+<!--                <th>Image</th>-->
+<!--                <th>Update</th>-->
+<!--                <th>Delete</th>-->
+<!--            </tr>-->
+<!--            {% for doctor in doctors %}-->
+<!--            <tr>-->
+<!--                <td>{{ doctor.id }}</td>-->
+<!--                <td>{{ doctor.full_name }}</td>-->
+<!--                <td>{{ doctor.degree }}</td>-->
+<!--                <td>{{ doctor.specialization }}</td>-->
+<!--                <td>{{ doctor.disease_specialist }}</td>-->
+<!--                <td>{{ doctor.email }}</td>-->
+<!--                <td>{{ doctor.contact }}</td>-->
+<!--                <td>{{ doctor.address }}</td>-->
+<!--                <td>{{ doctor.country }}</td>-->
+<!--                <td>{{ doctor.gender }}</td>-->
+<!--                <td><img src="data:image/png;base64,{{ doctor.image_data }}" alt="Doctor Image"></td>-->
+<!--                <td>-->
+<!--                    <button type="button" onclick="openUpdateModal({{ doctor.id }}, '{{ doctor.full_name }}', '{{ doctor.degree }}', '{{ doctor.specialization }}', '{{ doctor.disease_specialist }}', '{{ doctor.email }}', '{{ doctor.contact }}', '{{ doctor.address }}', '{{ doctor.country }}', '{{ doctor.gender }}')">Update</button>-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    <button type="button" onclick="deleteDoctor({{ doctor.id }})">Delete</button>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            {% endfor %}-->
+<!--        </table>-->
+<!--    </div>-->
+<!--&lt;!&ndash; Modal for Update Form &ndash;&gt;-->
+<!--<div id="updateModal" class="modal">-->
+<!--    <div class="modal-content">-->
+<!--        <span id="closeModal" style="float: right; cursor: pointer;">&times;</span>-->
+<!--        <h2>Update Doctor Information</h2>-->
+<!--        <form id="updateForm">-->
+<!--            <input type="hidden" id="updateDoctorId" name="doctor_id">-->
+<!--            <div class="input-box">-->
+<!--                <span class="details">Full Name</span>-->
+<!--                <input type="text" id="updateFullName" name="full_name">-->
+<!--            </div>-->
+<!--            <div class="input-box">-->
+<!--                <span class="details">Degree</span>-->
+<!--                <input type="text" id="updateDegree" name="degree">-->
+<!--            </div>-->
+<!--            <div class="input-box">-->
+<!--                <span class="details">Specialization</span>-->
+<!--                <input type="text" id="updateSpecialization" name="specialization">-->
+<!--            </div>-->
+<!--            <div class="input-box">-->
+<!--                <span class="details">Disease Specialist</span>-->
+<!--                <input type="text" id="updateDiseaseSpecialist" name="disease_specialist">-->
+<!--            </div>-->
+<!--            <div class="input-box">-->
+<!--                <span class="details">Email</span>-->
+<!--                <input type="text" id="updateEmail" name="email">-->
+<!--            </div>-->
+<!--            <div class="input-box">-->
+<!--                <span class="details">Contact</span>-->
+<!--                <input type="text" id="updateContact" name="contact">-->
+<!--            </div>-->
+<!--            <div class="input-box">-->
+<!--                <span class="details">Address</span>-->
+<!--                <input type="text" id="updateAddress" name="address">-->
+<!--            </div>-->
+<!--            <div class="input-box">-->
+<!--                <span class="details">Country</span>-->
+<!--                <input type="text" id="updateCountry" name="country">-->
+<!--            </div>-->
+<!--            <div class="gender-details">-->
+<!--                <input type="radio" id="updateMale" name="updateGender" value="Male">-->
+<!--                <input type="radio" id="updateFemale" name="updateGender" value="Female">-->
+<!--                <span class="gender-title">Gender</span>-->
+<!--                <div class="category">-->
+<!--                    <label for="updateMale">-->
+<!--                        <span class="dot one"></span>-->
+<!--                        <span class="gender">Male</span>-->
+<!--                    </label>-->
+<!--                    <label for="updateFemale">-->
+<!--                        <span class="dot two"></span>-->
+<!--                        <span class="gender">Female</span>-->
+<!--                    </label>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; Add other fields for updating &ndash;&gt;-->
+<!--            &lt;!&ndash; ... &ndash;&gt;-->
+<!--            <button type="button" onclick="submitUpdate()">Update</button>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<script>-->
+<!--    function openUpdateModal(doctorId, fullName, degree, specialization, diseaseSpecialist, email, contact, address, country, gender) {-->
+<!--        document.getElementById('updateDoctorId').value = doctorId;-->
+<!--        document.getElementById('updateFullName').value = fullName;-->
+<!--        document.getElementById('updateDegree').value = degree;-->
+<!--        document.getElementById('updateSpecialization').value = specialization;-->
+<!--        document.getElementById('updateDiseaseSpecialist').value = diseaseSpecialist;-->
+<!--        document.getElementById('updateEmail').value = email;-->
+<!--        document.getElementById('updateContact').value = contact;-->
+<!--        document.getElementById('updateAddress').value = address;-->
+<!--        document.getElementById('updateCountry').value = country;-->
+<!--        if (gender === 'Male') {-->
+<!--            document.getElementById('updateMale').checked = true;-->
+<!--        } else if (gender === 'Female') {-->
+<!--            document.getElementById('updateFemale').checked = true;-->
+<!--        }-->
+
+<!--        // Display the modal-->
+<!--        document.getElementById('updateModal').style.display = 'block';-->
+<!--    }-->
+
+<!--    function submitUpdate() {-->
+<!--        var doctorId = document.getElementById('updateDoctorId').value;-->
+
+<!--        // Get other updated fields accordingly-->
+<!--        var fullName = document.getElementById('updateFullName').value;-->
+<!--        var degree = document.getElementById('updateDegree').value;-->
+<!--        var specialization = document.getElementById('updateSpecialization').value;-->
+<!--        var diseaseSpecialist = document.getElementById('updateDiseaseSpecialist').value;-->
+<!--        var email = document.getElementById('updateEmail').value;-->
+<!--        var contact = document.getElementById('updateContact').value;-->
+<!--        var address = document.getElementById('updateAddress').value;-->
+<!--        var country = document.getElementById('updateCountry').value;-->
+<!--        var gender = document.querySelector('input[name="updateGender"]:checked').value;-->
+
+<!--        $.ajax({-->
+<!--            type: "POST",-->
+<!--            url: "/admin/update/" + doctorId,-->
+<!--            data: {-->
+<!--                full_name: fullName,-->
+<!--                degree: degree,-->
+<!--                specialization: specialization,-->
+<!--                disease_specialist: diseaseSpecialist,-->
+<!--                email: email,-->
+<!--                contact: contact,-->
+<!--                address: address,-->
+<!--                country: country,-->
+<!--                gender: gender-->
+<!--            },-->
+<!--            success: function (response) {-->
+<!--                console.log(response);-->
+<!--                location.reload();-->
+<!--            },-->
+<!--            error: function (error) {-->
+<!--                console.error(error);-->
+<!--            }-->
+<!--        });-->
+
+<!--        document.getElementById('updateModal').style.display = 'none';-->
+<!--    }-->
+<!--</script>-->
+
+<!--<-->
+<!--<script>-->
+<!--    function displayUpdateImage() {-->
+<!--        const fileInput = document.getElementById('updateImage');-->
+<!--        const uploadedImage = document.getElementById('uploadedUpdateImage');-->
+
+<!--        const file = fileInput.files[0];-->
+
+<!--        if (file) {-->
+<!--            const reader = new FileReader();-->
+<!--            reader.onload = function (e) {-->
+<!--                uploadedImage.src = e.target.result;-->
+<!--                uploadedImage.classList.add('active');-->
+<!--            };-->
+<!--            reader.readAsDataURL(file);-->
+<!--        }-->
+<!--    }-->
+<!--</script>-->
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Admin Panel</title>-->
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">-->
+<!--    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>-->
+<!--    <style>-->
+<!--        /* Your existing styles remain unchanged */-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <div class="container">-->
+<!--        <h1>Admin Panel</h1>-->
+<!--        <table>-->
+<!--            <tr>-->
+<!--                &lt;!&ndash; Your existing table headers &ndash;&gt;-->
+<!--            </tr>-->
+<!--            {% for doctor in doctors %}-->
+<!--            <tr>-->
+<!--                <td>{{ doctor.id }}</td>-->
+<!--                <td>{{ doctor.full_name }}</td>-->
+<!--                <td>{{ doctor.degree }}</td>-->
+<!--                <td>{{ doctor.specialization }}</td>-->
+<!--                <td>{{ doctor.disease_specialist }}</td>-->
+<!--                <td>{{ doctor.email }}</td>-->
+<!--                <td>{{ doctor.contact }}</td>-->
+<!--                <td>{{ doctor.address }}</td>-->
+<!--                <td>{{ doctor.country }}</td>-->
+<!--                <td>{{ doctor.gender }}</td>-->
+<!--                <td><img src="data:image/png;base64,{{ doctor.image_data }}" alt="Doctor Image"></td>-->
+<!--                <td>-->
+<!--                    <button type="button" onclick="openUpdateModal({{ doctor.id }})">Update</button>-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    <button type="button" onclick="deleteDoctor({{ doctor.id }})">Delete</button>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            {% endfor %}-->
+<!--        </table>-->
+<!--    </div>-->
+<!--&lt;!&ndash; Modal for Update Form &ndash;&gt;-->
+<!--<div id="updateModal" class="modal">-->
+<!--    <div class="modal-content">-->
+<!--        <span id="closeModal" style="float: right; cursor: pointer;">&times;</span>-->
+<!--        <h2>Update Doctor Information</h2>-->
+<!--        <form id="updateForm">-->
+<!--            <input type="hidden" id="updateDoctorId" name="doctor_id">-->
+<!--            <div class="input-box">-->
+<!--                <span class="details">Full Name</span>-->
+<!--                <input type="text" id="updateFullName" name="full_name">-->
+<!--            </div>-->
+<!--            <div class="input-box">-->
+<!--                <span class="details">Degree</span>-->
+<!--                <input type="text" id="updateDegree" name="degree">-->
+<!--            </div>-->
+<!--            <div class="input-box">-->
+<!--                <span class="details">Specialization</span>-->
+<!--                <input type="text" id="updateSpecialization" name="specialization">-->
+<!--            </div>-->
+<!--            <div class="input-box">-->
+<!--                <span class="details">Disease Specialist</span>-->
+<!--                <input type="text" id="updateDiseaseSpecialist" name="disease_specialist">-->
+<!--            </div>-->
+<!--            <div class="input-box">-->
+<!--                <span class="details">Email</span>-->
+<!--                <input type="text" id="updateEmail" name="email">-->
+<!--            </div>-->
+<!--            <div class="input-box">-->
+<!--                <span class="details">Contact</span>-->
+<!--                <input type="text" id="updateContact" name="contact">-->
+<!--            </div>-->
+<!--            <div class="input-box">-->
+<!--                <span class="details">Address</span>-->
+<!--                <input type="text" id="updateAddress" name="address">-->
+<!--            </div>-->
+<!--            <div class="input-box">-->
+<!--                <span class="details">Country</span>-->
+<!--                <input type="text" id="updateCountry" name="country">-->
+<!--            </div>-->
+<!--            <div class="gender-details">-->
+<!--                <input type="radio" id="updateMale" name="updateGender" value="Male">-->
+<!--                <input type="radio" id="updateFemale" name="updateGender" value="Female">-->
+<!--                <span class="gender-title">Gender</span>-->
+<!--                <div class="category">-->
+<!--                    <label for="updateMale">-->
+<!--                        <span class="dot one"></span>-->
+<!--                        <span class="gender">Male</span>-->
+<!--                    </label>-->
+<!--                    <label for="updateFemale">-->
+<!--                        <span class="dot two"></span>-->
+<!--                        <span class="gender">Female</span>-->
+<!--                    </label>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; Add other fields for updating &ndash;&gt;-->
+<!--            &lt;!&ndash; ... &ndash;&gt;-->
+<!--            <button type="button" onclick="submitUpdate()">Update</button>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; Inside the update form in the modal &ndash;&gt;-->
+<!--<div class="input-box">-->
+<!--    <span class="details">Update Image</span>-->
+<!--    <input type="file" id="updateImage" name="file-input" accept="image/*" onchange="displayUpdateImage()">-->
+<!--</div>-->
+
+<!--</div>-->
+
+<!--    <script>-->
+<!--        function deleteDoctor(doctorId) {-->
+<!--            var username = prompt("Enter username:");-->
+<!--            var password = prompt("Enter password:");-->
+
+<!--            $.ajax({-->
+<!--                type: "POST",-->
+<!--                url: "/admin/delete/" + doctorId,-->
+<!--                data: { username: username, password: password },-->
+<!--                success: function (response) {-->
+<!--                    console.log(response);-->
+<!--                    location.reload();-->
+<!--                },-->
+<!--                error: function (error) {-->
+<!--                    console.error(error);-->
+<!--                }-->
+<!--            });-->
+<!--        }-->
+
+<!--          function openUpdateModal(doctorId, fullName, degree, specialization, diseaseSpecialist, email, contact, address, country, gender) {-->
+<!--        document.getElementById('updateDoctorId').value = doctorId;-->
+<!--        document.getElementById('updateFullName').value = fullName;-->
+<!--        document.getElementById('updateDegree').value = degree;-->
+<!--        document.getElementById('updateSpecialization').value = specialization;-->
+<!--        document.getElementById('updateDiseaseSpecialist').value = diseaseSpecialist;-->
+<!--        document.getElementById('updateEmail').value = email;-->
+<!--        document.getElementById('updateContact').value = contact;-->
+<!--        document.getElementById('updateAddress').value = address;-->
+<!--        document.getElementById('updateCountry').value = country;-->
+<!--        if (gender === 'Male') {-->
+<!--            document.getElementById('updateMale').checked = true;-->
+<!--        } else if (gender === 'Female') {-->
+<!--            document.getElementById('updateFemale').checked = true;-->
+<!--        }-->
+
+<!--        // Display the modal-->
+<!--        document.getElementById('updateModal').style.display = 'block';-->
+<!--    }-->
+
+<!--    function submitUpdate() {-->
+<!--        var doctorId = document.getElementById('updateDoctorId').value;-->
+
+<!--        // Get other updated fields accordingly-->
+<!--        var fullName = document.getElementById('updateFullName').value;-->
+<!--        var degree = document.getElementById('updateDegree').value;-->
+<!--        var specialization = document.getElementById('updateSpecialization').value;-->
+<!--        var diseaseSpecialist = document.getElementById('updateDiseaseSpecialist').value;-->
+<!--        var email = document.getElementById('updateEmail').value;-->
+<!--        var contact = document.getElementById('updateContact').value;-->
+<!--        var address = document.getElementById('updateAddress').value;-->
+<!--        var country = document.getElementById('updateCountry').value;-->
+<!--        var gender = document.querySelector('input[name="updateGender"]:checked').value;-->
+
+<!--        $.ajax({-->
+<!--            type: "POST",-->
+<!--            url: "/admin/update/" + doctorId,-->
+<!--            data: {-->
+<!--                full_name: fullName,-->
+<!--                degree: degree,-->
+<!--                specialization: specialization,-->
+<!--                disease_specialist: diseaseSpecialist,-->
+<!--                email: email,-->
+<!--                contact: contact,-->
+<!--                address: address,-->
+<!--                country: country,-->
+<!--                gender: gender-->
+<!--            },-->
+<!--            success: function (response) {-->
+<!--                console.log(response);-->
+<!--                location.reload();-->
+<!--            },-->
+<!--            error: function (error) {-->
+<!--                console.error(error);-->
+<!--            }-->
+<!--        });-->
+
+<!--        document.getElementById('updateModal').style.display = 'none';-->
+<!--    }-->
+<!--         function displayUpdateImage() {-->
+<!--        const fileInput = document.getElementById('updateImage');-->
+<!--        const uploadedImage = document.getElementById('uploadedUpdateImage');-->
+
+<!--        const file = fileInput.files[0];-->
+
+<!--        if (file) {-->
+<!--            const reader = new FileReader();-->
+<!--            reader.onload = function (e) {-->
+<!--                uploadedImage.src = e.target.result;-->
+<!--                uploadedImage.classList.add('active');-->
+<!--            };-->
+<!--            reader.readAsDataURL(file);-->
+<!--        }-->
+<!--    }-->
+<!--    </script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+     <style>
+        body {
+            background: linear-gradient(135deg, #71b7e6, #9b59b6);
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow-x: auto;
+        }
+
+        h1 {
+            color: #fff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            color: #fff;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        td img {
+            max-width: 100px;
+            max-height: 100px;
+        }
+
+        button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        /* Add this style for the modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Admin Panel</h1>
+        <table>
+            <tr>
+             <th>ID</th>
+                <th>Full Name</th>
+                <th>Degree</th>
+                <th>Specialization</th>
+                <th>Disease Specialist</th>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>Address</th>
+                <th>Country</th>
+                <th>Gender</th>
+                <th>Image</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+            {% for doctor in doctors %}
+            <tr>
+                <td>{{ doctor.id }}</td>
+                <td>{{ doctor.full_name }}</td>
+                <td>{{ doctor.degree }}</td>
+                <td>{{ doctor.specialization }}</td>
+                <td>{{ doctor.disease_specialist }}</td>
+                <td>{{ doctor.email }}</td>
+                <td>{{ doctor.contact }}</td>
+                <td>{{ doctor.address }}</td>
+                <td>{{ doctor.country }}</td>
+                <td>{{ doctor.gender }}</td>
+                <td><img src="data:image/png;base64,{{ doctor.image_data }}" alt="Doctor Image"></td>
+<!--                <td>{% if doctor.approved %}Yes{% else %}No{% endif %}</td>-->
+    <td>
+        <a href="{{ url_for('update_doctor', doctor_id=doctor.id) }}" class="btn btn-primary">Update</a>
+    </td>
+<!--    <td>-->
+<!--        <button type="button" onclick="approveDoctor({{ doctor.id }})">Approve</button>-->
+<!--    </td>-->
+    <td>
+        <button type="button" onclick="openUpdateModal({{ doctor.id }})">Update</button>
+    </td>
+    <td>
+        <button type="button" onclick="deleteDoctor({{ doctor.id }})">Delete</button>
+    </td>
+
+
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- Modal for Update Form -->
+    <div id="updateModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" style="float: right; cursor: pointer;">&times;</span>
+            <h2>Update Doctor Information</h2>
+            <form id="updateForm">
+                <input type="hidden" id="updateDoctorId" name="doctor_id">
+                <div class="input-box">
+                    <span class="details">Full Name</span>
+                    <input type="text" id="updateFullName" name="full_name">
+                </div>
+                <div class="input-box">
+                    <span class="details">Degree</span>
+                    <input type="text" id="updateDegree" name="degree">
+                </div>
+                <div class="input-box">
+                    <span class="details">Specialization</span>
+                    <input type="text" id="updateSpecialization" name="specialization">
+                </div>
+                <div class="input-box">
+                    <span class="details">Disease Specialist</span>
+                    <input type="text" id="updateDiseaseSpecialist" name="disease_specialist">
+                </div>
+                <div class="input-box">
+                    <span class="details">Email</span>
+                    <input type="text" id="updateEmail" name="email">
+                </div>
+                <div class="input-box">
+                    <span class="details">Contact</span>
+                    <input type="text" id="updateContact" name="contact">
+                </div>
+                <div class="input-box">
+                    <span class="details">Address</span>
+                    <input type="text" id="updateAddress" name="address">
+                </div>
+                <div class="input-box">
+                    <span class="details">Country</span>
+                    <input type="text" id="updateCountry" name="country">
+                </div>
+                <div class="gender-details">
+                    <input type="radio" id="updateMale" name="updateGender" value="Male">
+                    <input type="radio" id="updateFemale" name="updateGender" value="Female">
+                    <span class="gender-title">Gender</span>
+                    <div class="category">
+                        <label for="updateMale">
+                            <span class="dot one"></span>
+                            <span class="gender">Male</span>
+                        </label>
+                        <label for="updateFemale">
+                            <span class="dot two"></span>
+                            <span class="gender">Female</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="approvalStatus"></div>
+                <div class="input-box">
+                    <span class="details">Update Image</span>
+                    <input type="file" id="updateImage" name="file-input" accept="image/*" onchange="displayUpdateImage()">
+                </div>
+                <button type="button" onclick="submitUpdate()">Update</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+    // Your existing JavaScript code here
+
+    function deleteDoctor(doctorId) {
+        var username = prompt("Enter username:");
+        var password = prompt("Enter password:");
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/delete/" + doctorId,
+            data: { username: username, password: password },
+            success: function (response) {
+                console.log(response);
+                location.reload();
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
+    function openUpdateModal(doctorId, fullName, degree, specialization, diseaseSpecialist, email, contact, address, country, gender) {
+        $('#updateDoctorId').val(doctorId);
+        $('#updateFullName').val(fullName);
+        $('#updateDegree').val(degree);
+        $('#updateSpecialization').val(specialization);
+        $('#updateDiseaseSpecialist').val(diseaseSpecialist);
+        $('#updateEmail').val(email);
+        $('#updateContact').val(contact);
+        $('#updateAddress').val(address);
+        $('#updateCountry').val(country);
+
+        if (gender === 'Male') {
+            $('#updateMale').prop('checked', true);
+        } else if (gender === 'Female') {
+            $('#updateFemale').prop('checked', true);
+        }
+
+        // Display the modal
+        $('#updateModal').css('display', 'block');
+    }
+
+  function submitUpdate() {
+    var doctorId = document.getElementById('updateDoctorId').value;
+    var fullName = document.getElementById('updateFullName').value;
+    var degree = document.getElementById('updateDegree').value;
+    var specialization = document.getElementById('updateSpecialization').value;
+    var diseaseSpecialist = document.getElementById('updateDiseaseSpecialist').value;
+    var email = document.getElementById('updateEmail').value;
+    var contact = document.getElementById('updateContact').value;
+    var address = document.getElementById('updateAddress').value;
+    var country = document.getElementById('updateCountry').value;
+    var gender = document.querySelector('input[name="updateGender"]:checked').value;
+
+    // Add an additional check for the image input
+    var imageInput = document.getElementById('updateImage');
+    var formData = new FormData();
+
+    formData.append('fullName', fullName);
+    formData.append('degree', degree);
+    formData.append('specialization', specialization);
+    formData.append('disease_specialist', diseaseSpecialist);
+    formData.append('email', email);
+    formData.append('contact', contact);
+    formData.append('address', address);
+    formData.append('country', country);
+    formData.append('gender', gender);
+
+    if (imageInput.files.length > 0) {
+        formData.append('file-input', imageInput.files[0]);
+    }
+
+    // Continue with your AJAX update call here
+    $.ajax({
+        type: "POST",
+        url: "/updateDoctor/" + doctorId,
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            console.log(response);
+            location.reload();
+        },
+        error: function (error) {
+            console.error(error);
+        }
+    });
+
+    // Hide the modal after processing
+    document.getElementById('updateModal').style.display = 'none';
+}
+
+    function performUpdate(doctorId, fullName, degree, specialization, diseaseSpecialist, email, contact, address, country, gender, imageData) {
+        // Your AJAX update logic here
+        $.ajax({
+            type: "POST",
+            url: "/admin/update/" + doctorId,
+            data: {
+                full_name: fullName,
+                degree: degree,
+                specialization: specialization,
+                disease_specialist: diseaseSpecialist,
+                email: email,
+                contact: contact,
+                address: address,
+                country: country,
+                gender: gender,
+                image_data: imageData  // Include image data in the update request
+            },
+            success: function (response) {
+                console.log(response);
+                location.reload();
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
+    function displayUpdateImage() {
+        const fileInput = $('#updateImage')[0];
+        const uploadedImage = $('#uploadedUpdateImage')[0];
+
+        const file = fileInput.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                uploadedImage.src = e.target.result;
+                uploadedImage.classList.add('active');
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Attach event listeners using jQuery
+    $('#updateModal').on('click', '#closeModal', function () {
+        $('#updateModal').css('display', 'none');
+    });
+
+    $('#updateModal').on('click', 'button[type="button"]', function () {
+        submitUpdate();
+    });
+
+    // Attach event listeners for delete and update buttons
+    $('table').on('click', 'button:contains("Update")', function () {
+        var doctorId = $(this).closest('tr').find('td:first').text();
+        openUpdateModal(doctorId);
+    });
+
+    $('table').on('click', 'button:contains("Delete")', function () {
+        var doctorId = $(this).closest('tr').find('td:first').text();
+        deleteDoctor(doctorId);
+    });
+});
+
+ // Add a function to handle doctor approval
+    function approveDoctor(doctorId) {
+        var approvalStatus = confirm("Do you want to approve this doctor?");
+        if (approvalStatus) {
+            $.ajax({
+                type: "POST",
+                url: "/admin/approve/" + doctorId,
+                success: function (response) {
+                    console.log(response);
+                    // Update the visual representation in the admin panel
+                    $('#approvalStatus').text('Doctor approved successfully.');
+                    // Reload the admin panel or update the specific row
+                    location.reload();
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+        }
+    }
+</script>
+
+</body>
+</html>
