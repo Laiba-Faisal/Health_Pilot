@@ -2,7 +2,7 @@
 
 HealthPilot is an intelligent, Flask-based web application that uses **machine learning** to predict possible diseases based on user-described symptoms and recommends the most suitable doctors for treatment. The goal is to assist users in understanding their symptoms and connecting them with relevant specialists quickly and efficiently.
 
----
+
 
 ## 🔍 Features
 
@@ -13,7 +13,7 @@ HealthPilot is an intelligent, Flask-based web application that uses **machine l
 ✅ **Secure Admin Authentication**  
 ✅ **User-Friendly Web Interface**  
 
----
+
 
 ## 🧠 How It Works
 
@@ -29,7 +29,7 @@ HealthPilot is an intelligent, Flask-based web application that uses **machine l
 4. **Admin Panel**  
    Admins can view, update, and delete doctor records.
 
----
+
 
 ## 🛠️ Tech Stack
 
@@ -41,13 +41,9 @@ HealthPilot is an intelligent, Flask-based web application that uses **machine l
 - **Bootstrap** (UI Styling)
 - **Base64** (Image encoding for doctor profiles)
 
----
 
-## 🖼️ Screenshots
 
-> _Add screenshots of the Home page, Doctor Registration, Admin Panel, and Prediction Result here._
 
----
 
 ## 🚀 Getting Started
 
@@ -60,5 +56,5 @@ HealthPilot is an intelligent, Flask-based web application that uses **machine l
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/healthpilot.git
+   [git clone https://github.com/yourusername/healthpilot.git](https://github.com/Laiba-Faisal/Health_Pilot.git)
    cd healthpilot
